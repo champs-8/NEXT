@@ -1,0 +1,12 @@
+npx create next-app (nome) -> criar projeto next
+responder as perguntas e seguir.
+
+yarn dev -> rodar o projeto.
+
+
+next ja vem com sistema de roteamento nativo, sem precisar por exemplo do react- router-dom.
+
+regras para componentes que sao paginas {
+    1° o index tem que ser um export default.
+}
+Bora bill
