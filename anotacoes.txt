@@ -9,4 +9,11 @@ next ja vem com sistema de roteamento nativo, sem precisar por exemplo do react-
 regras para componentes que sao paginas {
     1° o index tem que ser um export default.
 }
-Bora bill
+
+Ao criar componentes dentro de pages, ele já se torna uma rota.
+
+instalar o typescript -> yarn add typescript @types/react @types/nodes -D
+
+instalar o sass -> yarn add sass
+SASS nao aceita underlines nos nomes dos módulos
+
