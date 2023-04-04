@@ -3,6 +3,8 @@ responder as perguntas e seguir.
 
 yarn dev -> rodar o projeto.
 
+yarn add react-icons -> instalar biblioteca de icons
+
 
 next ja vem com sistema de roteamento nativo, sem precisar por exemplo do react- router-dom.
 
@@ -17,3 +19,7 @@ instalar o typescript -> yarn add typescript @types/react @types/nodes -D
 instalar o sass -> yarn add sass
 SASS nao aceita underlines nos nomes dos módulos
 
+Será criado um Document, um componente que vai rodar apenas uma vez.
+retornará uma estrutura html e dentro do body precisa estar o nextScript.
+
+import logoImg from "/public/logo.png" //forma correta dese importar um imagem
