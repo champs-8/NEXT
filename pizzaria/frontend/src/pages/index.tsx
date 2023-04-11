@@ -1,9 +1,10 @@
 import Head from "next/head"
-import logoImg from "/public/logo.png" //forma correta dese importar um imagem
-import styles from "../styles/home.module.scss"
+import logoImg from "../../public/logo.png" //forma correta dese importar um imagem
+import styles from "../styles/home.module.scss" // trabalhar com estilos
 import Image from "next/image" // tag para se trabalhar com imagem, inves do html
-import {Input} from "../pages/components/ui/Input"
-import {Button} from "../pages/components/ui/Button"
+import Link from "next/link"
+import {Input} from "../components/ui/Input"
+import {Button} from "../components/ui/Button"
 
 export default function Home() {
   return (
@@ -21,8 +22,12 @@ export default function Home() {
           <Input placeholder="Digite sua senha" type="password"/>
 
           {/* enquanto tiver carregando */}
-          <Button type="submit" loading={false}> Cadastrar</Button>
+          <Button type="submit" loading={false}> Acessar</Button>
         </form>
+
+        {/* no link sempre precisa utilizar o href */}
+        {/* legacyBehavior serve para poder usar uma ancora dentro do link */}
+        <Link legacyBehavior href='/sign'><a className={styles.text}>Não possui uma conta? Cadastre-se</a></Link>
       </div>
     </div>
     </> //frag, uma tag sem definição

@@ -23,3 +23,12 @@ Será criado um Document, um componente que vai rodar apenas uma vez.
 retornará uma estrutura html e dentro do body precisa estar o nextScript.
 
 import logoImg from "/public/logo.png" //forma correta dese importar um imagem
+
+no link sempre precisa utilizar o href
+
+legacyBehavior serve para poder usar uma ancora dentro do link 
+
+o que é o contexto? É de alguma forma, o usuário ter acesso as informções como por exemplo, se está logado ou nao
+o token, ou o id. em qualquer página que estiver.
+
+context API -> trabalhar de forma global
