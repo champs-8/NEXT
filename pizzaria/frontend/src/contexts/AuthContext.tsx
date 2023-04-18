@@ -1,13 +1,16 @@
 import { type } from "os";
 import { createContext, ReactNode, useState } from "react"; 
+import {destroyCookie} from 'nookies'
+import router from 'next/router'
 
 type AuthContextData = {
     user: userProps,
     isAuthenticated: boolean,
-    signIn : (credentials: SingInProps) => Promise<void>;
+    signIn : (credentials: SignInProps) => Promise<void>;
+    signOut : () => void;
 }
 
-type SingInProps = {
+type SignInProps = {
     email: string,
     password: string;
 }
@@ -22,7 +25,7 @@ type AuthProviderProps = {
     children: ReactNode
 }
 
-const AuthContext = createContext({} as AuthContextData);
+export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({children}: AuthProviderProps) {
 
@@ -32,15 +35,25 @@ export function AuthProvider({children}: AuthProviderProps) {
     // do contrário, será false
     const isAuthenticated = !!user;
 
-    async function signIn() {
-        alert('clicou no login')
+    async function signIn({email, password}: SignInProps) {
+        console.log(`Email: ${email}`);
+        console.log(`password: ${password}`);
     }
 
     
     return (
-        <AuthContext.Provider value={{user, isAuthenticated, signIn}}>
+        <AuthContext.Provider value={{user, isAuthenticated, signIn, signOut}}>
             {children}
         </AuthContext.Provider>
     )
 }
 
+export function signOut() {
+    try{
+        destroyCookie(undefined, '@champizza.token')
+        //o primeiro argumento é o contexto, o segundo é coookie que foi informado na api
+        router.push('/')
+    }catch{
+        console.log('erro ao deslogar');
+    }
+}

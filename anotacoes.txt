@@ -5,6 +5,9 @@ yarn dev -> rodar o projeto.
 
 yarn add react-icons -> instalar biblioteca de icons
 
+yarn add axios nookies jwt-decode-> axios é biblioteca para trabalahr com a API e fazer requisições http; nookies
+é para trabalhar com cookies clientside e serverside. JWT é para decodificar o jwt futuramente.
+
 
 next ja vem com sistema de roteamento nativo, sem precisar por exemplo do react- router-dom.
 
@@ -32,3 +35,6 @@ o que é o contexto? É de alguma forma, o usuário ter acesso as informções c
 o token, ou o id. em qualquer página que estiver.
 
 context API -> trabalhar de forma global
+
+para ultilizar os valores do inputs e deixar-los dinamico, usa-se useState.
+

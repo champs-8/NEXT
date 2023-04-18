@@ -4,9 +4,32 @@ import styles from "../styles/home.module.scss" // trabalhar com estilos
 import Image from "next/image" // tag para se trabalhar com imagem, inves do html
 import Link from "next/link"
 import {Input} from "../components/ui/Input"
-import {Button} from "../components/ui/Button"
+import {Button} from "../components/ui/Button" 
+import { AuthContext } from "@/contexts/AuthContext"
+import { FormEvent, useContext, useState } from 'react'
 
 export default function Home() {
+  //usar o contexto que importou
+  const {signIn} = useContext(AuthContext);
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  //loading so vai ser true quando clicar no botao
+  const [loading, setLoading] = useState(false)
+
+  async function handleLogin(event: FormEvent) {
+    event.preventDefault();
+
+    let data = {
+      email,
+      password
+    };
+
+    //é uma promisse, vai consumir uma API, entao precisa do await
+    await signIn(data);
+  }
+
   return (
     //titulo dinamico
 
@@ -17,9 +40,13 @@ export default function Home() {
     <div className={styles.containerCenter}>
       <Image src={logoImg} alt="logo Champs pizzaria" id={styles.logo}/>
       <div className={styles.login}>
-        <form>
-          <Input placeholder="Digite seu usuário" type="text"/>
-          <Input placeholder="Digite sua senha" type="password"/>
+        <form onSubmit={handleLogin}>
+
+          {/* o value vai ser o valor do useState 
+          onchange é toda vez que digita algo la dentro da caixa,
+          e será configurado no set... o e.target.value, que é o que foi digitado */}
+          <Input placeholder="Digite seu usuário" type="text" value={email} onChange={ (e) => setEmail(e.target.value) }/>
+          <Input placeholder="Digite sua senha" type="password" value={password} onChange={ (e) => setPassword(e.target.value) }/>
 
           {/* enquanto tiver carregando */}
           <Button type="submit" loading={false}> Acessar</Button>
