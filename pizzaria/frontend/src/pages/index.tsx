@@ -7,6 +7,7 @@ import {Input} from "../components/ui/Input"
 import {Button} from "../components/ui/Button" 
 import { AuthContext } from "@/contexts/AuthContext"
 import { FormEvent, useContext, useState } from 'react'
+import {toast} from 'react-toastify'
 
 export default function Home() {
   //usar o contexto que importou
@@ -23,7 +24,7 @@ export default function Home() {
 
     //verifica se o usuario passou algum dado
     if (email === '' || password === '' ) {
-      alert('Preencha os dados')
+      toast.warning('PREENCHA OS CAMPOS')
       return;
     }
 
