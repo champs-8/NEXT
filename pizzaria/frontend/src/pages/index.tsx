@@ -21,6 +21,15 @@ export default function Home() {
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
 
+    //verifica se o usuario passou algum dado
+    if (email === '' || password === '' ) {
+      alert('Preencha os dados')
+      return;
+    }
+
+    //se tiver passado, vai carregar o loading
+    setLoading(true);
+    
     let data = {
       email,
       password
@@ -28,6 +37,8 @@ export default function Home() {
 
     //é uma promisse, vai consumir uma API, entao precisa do await
     await signIn(data);
+
+    setLoading(false);
   }
 
   return (
@@ -38,7 +49,7 @@ export default function Home() {
       <title>Champizza - Faça seu login</title>
     </Head>
     <div className={styles.containerCenter}>
-      <Image src={logoImg} alt="logo Champs pizzaria" id={styles.logo}/>
+      <Image src={logoImg} alt="logo Champs pizzaria" id={styles.logo} priority={true}/>
       <div className={styles.login}>
         <form onSubmit={handleLogin}>
 
@@ -49,7 +60,7 @@ export default function Home() {
           <Input placeholder="Digite sua senha" type="password" value={password} onChange={ (e) => setPassword(e.target.value) }/>
 
           {/* enquanto tiver carregando */}
-          <Button type="submit" loading={false}> Acessar</Button>
+          <Button type="submit" loading={loading}> Acessar</Button>
         </form>
 
         {/* no link sempre precisa utilizar o href */}

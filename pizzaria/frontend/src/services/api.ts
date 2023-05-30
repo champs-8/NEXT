@@ -1,5 +1,4 @@
 import axios, {AxiosError} from "axios";
-import { error } from "console";
 import { parseCookies } from "nookies";
 import { AuthTokenError } from "./errors/AuthTokenError";
 import { signOut } from "@/contexts/AuthContext";
@@ -9,7 +8,7 @@ export function setupApiClient(ctx = undefined) {
     let cookies = parseCookies(ctx);
 
     const api = axios.create({
-        baseURL: 'http://localhost:3000',
+        baseURL: 'http://localhost:8080',
         headers: {
             Authorization: `Bearer ${cookies['@champizza.token']}`
         }
@@ -31,4 +30,5 @@ export function setupApiClient(ctx = undefined) {
         return Promise.reject(error);
     })
 
+    return api
 }

@@ -8,6 +8,7 @@ yarn add react-icons -> instalar biblioteca de icons
 yarn add axios nookies jwt-decode-> axios é biblioteca para trabalahr com a API e fazer requisições http; nookies
 é para trabalhar com cookies clientside e serverside. JWT é para decodificar o jwt futuramente.
 
+yarn add react-toastify -> biblioteca para animações de alerta
 
 next ja vem com sistema de roteamento nativo, sem precisar por exemplo do react- router-dom.
 

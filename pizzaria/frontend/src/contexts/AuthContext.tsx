@@ -1,13 +1,14 @@
-import { type } from "os";
 import { createContext, ReactNode, useState } from "react"; 
-import {destroyCookie} from 'nookies'
-import router from 'next/router'
+import {destroyCookie, setCookie} from 'nookies'
+import Router from 'next/router'
+import {api} from '../services/apiClient'
 
 type AuthContextData = {
-    user: userProps,
-    isAuthenticated: boolean,
+    user: userProps;
+    isAuthenticated: boolean;
     signIn : (credentials: SignInProps) => Promise<void>;
     signOut : () => void;
+    signUp : (credentials:SignUpProps) => Promise<void>
 }
 
 type SignInProps = {
@@ -25,6 +26,12 @@ type AuthProviderProps = {
     children: ReactNode
 }
 
+type SignUpProps = {
+    name: string,
+    email: string,
+    password: string
+}
+
 export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({children}: AuthProviderProps) {
@@ -36,13 +43,59 @@ export function AuthProvider({children}: AuthProviderProps) {
     const isAuthenticated = !!user;
 
     async function signIn({email, password}: SignInProps) {
-        console.log(`Email: ${email}`);
-        console.log(`password: ${password}`);
+        // é uma requisição que pode dar certo, mas pode dar errado tambem
+        try {
+            const response = await api.post('/login', {
+                email,
+                password
+            });
+
+            console.log(response.data);
+
+            const {id, name, token} = response.data;
+            
+            setCookie(undefined, '@champizza.token', token, {
+                maxAge: 60*60*24*30, //expira emum mês
+                path: "/" //quais caminhos terão acesso ao cookie
+            })
+
+            setUser({
+                id,
+                name,
+                email,
+            })
+
+            //passar para as proximas requisições, o nosso token
+            api.defaults.headers['Authorization'] = `Bearer ${token}`;
+
+            //redirecionar o user para o dashboard
+            Router.push(`/dashboard`);
+        }
+        catch(err) {
+            console.log(`Erro ao acessar: ${err}`);
+        }
     }
 
+    async function signUp({name, email, password}: SignUpProps) {
+        try {
+
+            const response = await api.post('/users', {
+                name,
+                email,
+                password
+            })
+
+            console.log('cadastrado com sucesso');
+
+            Router.push('/');
+
+        }catch(err){
+            console.log(`Error ao cadastrar:\n${err}`);
+        }
+    }
     
     return (
-        <AuthContext.Provider value={{user, isAuthenticated, signIn, signOut}}>
+        <AuthContext.Provider value={{user, isAuthenticated, signIn, signOut, signUp}}>
             {children}
         </AuthContext.Provider>
     )
@@ -52,7 +105,7 @@ export function signOut() {
     try{
         destroyCookie(undefined, '@champizza.token')
         //o primeiro argumento é o contexto, o segundo é coookie que foi informado na api
-        router.push('/')
+        Router.push('/')
     }catch{
         console.log('erro ao deslogar');
     }
