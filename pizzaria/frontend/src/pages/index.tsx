@@ -8,6 +8,7 @@ import {Button} from "../components/ui/Button"
 import { AuthContext } from "@/contexts/AuthContext"
 import { FormEvent, useContext, useState } from 'react'
 import {toast} from 'react-toastify'
+import { canSSRGuest } from "@/utils/canSSRGuest"
 
 export default function Home() {
   //usar o contexto que importou
@@ -72,3 +73,11 @@ export default function Home() {
     </> //frag, uma tag sem definição
   )
 }
+
+// antes de devolver a interface para o user, poderá ser feito alguma requisição
+// no servidor, por exemplo quando se trata de rotas privadas
+export const getServerSideProps = canSSRGuest( async (ctx)=> {
+  return {
+    props:{}
+  }
+})

@@ -1,5 +1,5 @@
-import { createContext, ReactNode, useState } from "react"; 
-import {destroyCookie, setCookie} from 'nookies'
+import { createContext, ReactNode, useState, useEffect} from "react"; 
+import {destroyCookie, parseCookies, setCookie} from 'nookies'
 import Router from 'next/router'
 import {api} from '../services/apiClient'
 import {toast} from 'react-toastify'
@@ -42,6 +42,35 @@ export function AuthProvider({children}: AuthProviderProps) {
     // se tiver alguma informação armazenada no user, a constante receberá o valor true
     // do contrário, será false
     const isAuthenticated = !!user;
+
+    //vai servir para pegar os dados do user logado, quando a página
+    //for recarregada
+    useEffect(()=>{
+        
+        //tentar pegar algo no cookie
+        const {'@champizza.token':token} = parseCookies();
+
+        //vai buscar informações na rota de detalhes,
+        //colocar o resultado no response,
+        //e configurar o setUser como se fosse a primeira vez de login
+        if(token){
+            api.get('/details').then(response => {
+                const {id, name, email} = response.data;
+
+                setUser({
+                    id,
+                    name,
+                    email
+                })
+            }).catch(()=>{
+
+                //se deu erro ao buscar as informações,
+                //desloga o user
+                signOut();
+            })
+        }
+        
+    }, [])
 
     async function signIn({email, password}: SignInProps) {
         // é uma requisição que pode dar certo, mas pode dar errado tambem
