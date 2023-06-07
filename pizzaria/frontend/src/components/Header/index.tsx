@@ -12,11 +12,11 @@ export function Header() {
         <header className={styles.headerContainer}>
             <div className={styles.headerContent}>
                 <Link href={'/dashboard'}>
-                    <img src='/logo.png' width={140} height={60} />
+                    <img src='/logo.png' width={200} height={50} />
                 </Link>
                 <nav className={styles.menuNav}>
                     <Link legacyBehavior href={'/category'}>
-                        <a>Nova categoria</a>
+                        <a>Categoria</a>
                     </Link>
                     <Link legacyBehavior href={'/menu'}>
                         <a>Cardápio</a>

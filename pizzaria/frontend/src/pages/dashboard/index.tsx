@@ -6,7 +6,7 @@ export default function Dashboard() {
     return (
         <>
         <Head>
-            <title>Painel - Sujeito Programador</title>
+            <title>Painel - ChamPizza</title>
         </Head>
         <div>
             <Header/>
