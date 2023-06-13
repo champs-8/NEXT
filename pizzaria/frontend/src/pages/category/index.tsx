@@ -2,6 +2,9 @@ import Head from "next/head";
 import { Header } from "@/components/Header";
 import styles from './styles.module.scss'
 import { FormEvent, useState } from "react";
+import {  setupApiClient } from '../../services/api';
+import { toast } from "react-toastify";
+import {canSSRAuth} from '../../utils/canSSRAuth'
 
 export default function Category() {
 
@@ -9,7 +12,21 @@ export default function Category() {
 
     async function handleRegister(event:FormEvent) {
         event.preventDefault();
-        alert('Categoria '+ name);
+
+        if(name === '') {
+            return;
+        }
+
+        //requisição para a rota 
+        const apiClient = setupApiClient();
+        await apiClient.post('/categories', {
+            name: name
+        })
+
+        toast.success('Categoria cadastrada com sucesso')
+        //depois que cadastrar, vai voltar o input de categoria para vazio
+        setName('');
+
     }
     
     return(
@@ -27,7 +44,7 @@ export default function Category() {
                             placeholder="Digite o nome da categoria" 
                             value={name}
                             onChange={(e) => setName(e.target.value)}/>
-                        <button type={"submit"} className={styles.button}>
+                        <button type="submit" className={styles.button}>
                             Cadastrar
                         </button>
                     </form>
@@ -36,3 +53,8 @@ export default function Category() {
         </>
     );
 }
+export const getServerSideProps = canSSRAuth(async(ctx)=> {
+    return {
+        props: {}
+    }
+})

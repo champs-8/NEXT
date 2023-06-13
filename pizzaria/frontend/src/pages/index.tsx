@@ -48,7 +48,7 @@ export default function Home() {
 
     <>
     <Head>
-      <title>Champizza - Faça seu login</title>
+      <title>ChamPizza - Faça seu login</title>
     </Head>
     <div className={styles.containerCenter}>
       <Image src={logoImg} alt="logo Champs pizzaria" id={styles.logo} priority={true}/>
