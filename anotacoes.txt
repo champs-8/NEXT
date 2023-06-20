@@ -5,6 +5,8 @@ yarn dev -> rodar o projeto.
 
 yarn add react-icons -> instalar biblioteca de icons
 
+yarn add react-modal -> instalação de modals
+
 yarn add axios nookies jwt-decode-> axios é biblioteca para trabalahr com a API e fazer requisições http; nookies
 é para trabalhar com cookies clientside e serverside. JWT é para decodificar o jwt futuramente.
 
