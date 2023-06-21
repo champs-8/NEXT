@@ -96,7 +96,11 @@ export default function Dashboard({orders}:HomeProps) {
 
                         {/* quando o modalVisible tiver TRUE, vai visualiza-lo */}
             {modalVisible && (
-                <ModalOrder/>
+                <ModalOrder
+                isOpen={modalVisible}
+                onRequestClose={handleCloseModal}
+                order={modalItem}
+                />
             )}
         </div>
         </>
