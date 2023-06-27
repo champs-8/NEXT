@@ -41,7 +41,7 @@ export type OrderItemProps = {
 
 export default function Dashboard({orders}:HomeProps) {
     const [orderList, setOrderList] = useState(orders||[]);
-    const [modalItem, setModalItem] = useState<OrderItemProps[]>()
+    const [modalItem, setModalItem] = useState<OrderItemProps[]>();
     const [modalVisible, setModalVisible] = useState(false);
 
     function handleCloseModal() {
@@ -56,8 +56,8 @@ export default function Dashboard({orders}:HomeProps) {
             }
         })
 
-        setModalItem(response.data)
-        setModalVisible(true)
+        setModalItem(response.data);
+        setModalVisible(true);
     }
 
     // será mostrado o modal na pagina principal
@@ -97,9 +97,9 @@ export default function Dashboard({orders}:HomeProps) {
                         {/* quando o modalVisible tiver TRUE, vai visualiza-lo */}
             {modalVisible && (
                 <ModalOrder
-                isOpen={modalVisible}
-                onRequestClose={handleCloseModal}
-                order={modalItem}
+                    isOpen={modalVisible}
+                    onRequestClose={handleCloseModal}
+                    order={modalItem}
                 />
             )}
         </div>
