@@ -7,10 +7,12 @@ interface ModalOrderProps {
     isOpen: boolean,
     //metodo para fechar modal
     onRequestClose : () => void,
-    order: OrderItemProps[];
+    order: OrderItemProps[],
+    //vai receber o id para fechar o pedido e vai devolver nada
+    handleFinishOrder: (id: string) => void;
 }
 
-export function ModalOrder({isOpen, onRequestClose, order}:ModalOrderProps) {
+export function ModalOrder({isOpen, onRequestClose, order, handleFinishOrder}:ModalOrderProps) {
 
     //estilo do modal
     const customStyles = {
@@ -51,7 +53,7 @@ export function ModalOrder({isOpen, onRequestClose, order}:ModalOrderProps) {
                     </section>
                 ))}
 
-                <button className={styles.buttonOrder} onClick={()=>{}}>
+                <button className={styles.buttonOrder} onClick={()=> handleFinishOrder(order[0].order_id)}>
                     Concluir pedido
                 </button>
             </div>
