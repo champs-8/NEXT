@@ -5,7 +5,7 @@ import React from "react"
 
 export default function app(){
   return(
-    <View style={{flex:1, backgroundColor:'#505050', paddingTop: 25}}>
+    <View style={{flex:1, backgroundColor:'#505055', paddingTop: 25}}>
       {/* ja vem com o flexbox ativado 
       flex 1 faz ocupar a tela toda*/}
 
