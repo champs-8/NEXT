@@ -5,13 +5,13 @@ import React, {useState} from "react"
 
 export default function app(){
 
-  const [nome, setNome] = useState('Fulano')
+  const [nome, setNome] = useState('Irineu')
 
   function handleMudarNome() {
-    if(nome === 'Fulano'){
+    if(nome === 'Irineu'){
       setNome('ChamPizza')
     }else{
-      setNome('Fulano')
+      setNome('Irineu')
     }
   }
   
