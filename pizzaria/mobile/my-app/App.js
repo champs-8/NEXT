@@ -1,12 +1,28 @@
-import { View, Text, StyleSheet, TouchableOpacity, TextInput} from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList} from "react-native"
 // view é como se fosse a div, um espaço em branco
 //o text é para poder escrever texto
 import React, {useState} from "react"
 import {FontAwesome} from '@expo/vector-icons' //icones para ilustrações
+import Tarefa from './src/Tarefa'
 
 export default function app(){
 
   const [tarefa, setTarefa] = useState('');
+
+  const [list, setList] = useState([
+    {
+      key: '1',
+      item: 'comprar pão'
+    },
+    {
+      key: '2',
+      item: 'estudar programação'
+    }, 
+    {
+      key: '3',
+      item: 'Treinar por 2 horas'
+    }
+  ])
 
   function handleAdd() {
     alert(`A tarefa adicionada foi ${tarefa}`)
@@ -28,6 +44,15 @@ export default function app(){
           <FontAwesome name="plus" size={20} color='#FFF'/>
         </TouchableOpacity>
       </View>
+
+      {/* FlatList serve para poder ter lista dinamicas e interativas */}
+      <FlatList
+        data={list}
+        KeyExtractor={(item) => item.key }
+        renderItem={({item}) => <Tarefa data={item}/> } //vai renderizar esse componente   
+        // a propriedade item no data, vai servir para receber as informações da lista
+        style={styles.list}
+      />
     </View>
   );
 }
@@ -71,5 +96,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 4,
+  },
+  list: {
+    flex: 1,
+    backgroundColor:'#fff',
+    paddingStart: '4%',
+    paddingEnd: '4%',
   }
 });
