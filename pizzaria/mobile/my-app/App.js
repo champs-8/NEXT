@@ -9,23 +9,26 @@ export default function app(){
 
   const [tarefa, setTarefa] = useState('');
 
-  const [list, setList] = useState([
-    {
-      key: '1',
-      item: 'comprar pão'
-    },
-    {
-      key: '2',
-      item: 'estudar programação'
-    }, 
-    {
-      key: '3',
-      item: 'Treinar por 2 horas'
-    }
-  ])
+  const [list, setList] = useState([]);
 
   function handleAdd() {
-    alert(`A tarefa adicionada foi ${tarefa}`)
+    if(tarefa === ''){
+      return;
+    }
+
+    const dados = {
+      key: Date.now(), // data de hoje
+      item: tarefa
+    }
+
+    setList(oldArr => [dados, ...oldArr]); // pega os dados que ja tinha no array
+    //e adiciona com os novos dados
+
+    setTarefa('');//zerar o valor do input
+  }
+
+  function handleDelete(item) {
+    console.log(item);
   }
  
   return(
@@ -49,7 +52,8 @@ export default function app(){
       <FlatList
         data={list}
         KeyExtractor={(item) => item.key }
-        renderItem={({item}) => <Tarefa data={item}/> } //vai renderizar esse componente   
+        renderItem={({item}) => <Tarefa data={item} deleteItem={() => handleDelete(item.item)}/> } 
+        //vai renderizar esse componente   
         // a propriedade item no data, vai servir para receber as informações da lista
         style={styles.list}
       />
