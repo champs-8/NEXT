@@ -28,7 +28,11 @@ export default function app(){
   }
 
   function handleDelete(item) {
-    console.log(item);
+    let filtro = list.filter((tarefa) => {
+      return (tarefa.item !== item) //vai devolver todas aquelas que nao serão apagadas
+    });
+
+    setList(filtro);
   }
  
   return(
@@ -50,8 +54,8 @@ export default function app(){
 
       {/* FlatList serve para poder ter lista dinamicas e interativas */}
       <FlatList
-        data={list}
-        KeyExtractor={(item) => item.key }
+        data={list} //onde vai receber os dados
+        keyExtractor={(item) => item.key }
         renderItem={({item}) => <Tarefa data={item} deleteItem={() => handleDelete(item.item)}/> } 
         //vai renderizar esse componente   
         // a propriedade item no data, vai servir para receber as informações da lista

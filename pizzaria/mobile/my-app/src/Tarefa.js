@@ -11,7 +11,7 @@ export default function Tarefa({data, deleteItem}) {
                {/* vai chamar o delete item */}
                 <FontAwesome name="trash" size={20} color={'#22272e'}/>
             </TouchableOpacity>
-            <Text>{data.item}</Text>
+            <Text style={styles.textTarefas}>{data.item}</Text>
         </View>
     );
 }
@@ -26,5 +26,8 @@ const styles = StyleSheet.create({
     }, 
     button: {
         marginRight: 10
+    },
+    textTarefas: {
+        fontSize: 18
     }
 });
