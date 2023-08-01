@@ -1,6 +1,7 @@
-import React, {ReactNode, createContext, useState} from "react";
+import React, {ReactNode, createContext, useState, useEffect} from "react";//o use effect é o ciclo de vida
 import { api } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 // o que sendo fornecido no contexto
 type AuthContextData = {
@@ -45,7 +46,44 @@ export function AuthProvider({children}: AuthProviderProps) {
 
     //se o user tiver algum name, é porque foi feito o login,
     // as !! transforma a constante em um tipo booleano.
-    const isAuthenticated = !!user.email
+    const isAuthenticated = !!user.token
+
+
+
+    useEffect(() => {
+
+        async function getUser() {
+            //pegar os dados salvos do user
+            const userInfo = await AsyncStorage.getItem('@champizzaMob');
+
+            //vamos trasnformar as infos salvas como string em objeto de novo
+            //caso nao venha nenhuma informação no Async, criará um objeto vazio
+            let hasUser: UserProps = JSON.parse(userInfo || '{}');
+
+
+            //verificar se recebemos informações
+            if(Object.keys(hasUser).length > 0) {
+                //quer dizer que fez o login
+
+                
+                api.defaults.headers.common['Authorization'] = `Bearer ${hasUser.token}`;
+                
+                //informar os dados novamente 
+                setUser({
+                    id: hasUser.id,
+                    name: hasUser.name,
+                    email: hasUser.email,
+                    token: hasUser.token
+                })
+
+            }
+        }
+        getUser();
+    }, []) 
+    //como array de dependencias está vazio, assim que carregar a aplicação 
+    //ja será executado
+
+
 
     //metodo de login
     async function signIn({email, password}: SingInProps) {
@@ -59,6 +97,7 @@ export function AuthProvider({children}: AuthProviderProps) {
             // o AsyncStorage so salva string e nao objeto,
             // teremos que converter o obj
 
+
             const data = {
                 ...response.data
             };
@@ -70,9 +109,6 @@ export function AuthProvider({children}: AuthProviderProps) {
 
             setUser({id, name, token, email});
             setLoadingAuth(false);
-
-            console.log('logado pilantra');
-            console.log(isAuthenticated);
 
         }catch(err){
             console.log(`Erro ao acessar: ${err}`);
