@@ -26,7 +26,6 @@ export default function Routes() {
         );
     }
 
-    console.log(isAuthenticated);
     return(
         isAuthenticated ? <AppRoutes/> : <AuthRoutes/>
     );

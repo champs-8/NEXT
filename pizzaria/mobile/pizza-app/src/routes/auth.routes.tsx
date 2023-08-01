@@ -11,7 +11,7 @@ const Stack = createNativeStackNavigator();
 export default function AuthRoutes() {
     return(
         <Stack.Navigator>
-            <Stack.Screen name='signIn' component={SignIn} options={{headerShown:false}}/>
+            <Stack.Screen name='SignIn' component={SignIn} options={{headerShown:false}}/>
             {/* cada tela. qual component vai ser renderizado quando essa tela for chamada */}
             {/* option com HEADERSHOWN false, faz nao mostrar o header nativo */}
         </Stack.Navigator>
