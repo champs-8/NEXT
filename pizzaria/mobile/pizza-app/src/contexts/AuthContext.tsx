@@ -10,6 +10,9 @@ type AuthContextData = {
     //é uma função que vai passar como parametro informações de 
     //tal tipagem e retorna uma promise vazia
     signIn : (infos: SingInProps) => Promise<void>
+    logOut: () => Promise<void>;
+    loadingAuth: boolean
+    loading: boolean
 }
 
 //tudo aquilo que é informado ao banco de dados quando o usuario é logado
@@ -43,6 +46,7 @@ export function AuthProvider({children}: AuthProviderProps) {
     })
 
     const [loadingAuth, setLoadingAuth] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     //se o user tiver algum name, é porque foi feito o login,
     // as !! transforma a constante em um tipo booleano.
@@ -77,6 +81,8 @@ export function AuthProvider({children}: AuthProviderProps) {
                 })
 
             }
+
+            setLoading(false);
         }
         getUser();
     }, []) 
@@ -116,8 +122,25 @@ export function AuthProvider({children}: AuthProviderProps) {
         }
     }
 
+    //metodo de logOut
+
+    async function logOut() {
+        //limpar o token
+        await AsyncStorage.clear()
+        .then(() => {
+            
+            //ja que está apagando os dados, tambem vai tirar das constantes.
+            setUser({
+                email: '',
+                id: '',
+                name: '',
+                token: ''
+            })
+        })
+    }
+
     return(
-        <AuthContext.Provider value={{user, isAuthenticated, signIn}}>
+        <AuthContext.Provider value={{user, isAuthenticated, signIn, loading, loadingAuth, logOut}}>
             
             {/* todas as paginas vao passar por aqui,
             e o contexto deve ficar por volta da aplicação */}
