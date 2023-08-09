@@ -45,8 +45,17 @@ export default function Order() {
                     keyboardType='numeric' 
                     style={[styles.input, {width: '60%', textAlign: 'center'}]} 
                     value='1'
-                    
                 />
+            </View>
+
+            <View style={styles.actions}>
+                <TouchableOpacity style={styles.buttonAdd}>
+                    <Text style={styles.buttonText}>+</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.buttonNext}>
+                    <Text style={styles.buttonText}>Avançar</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -91,9 +100,35 @@ const styles = StyleSheet.create({
     qtdText: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#fFF'
+        color: '#fff',
+        paddingBottom:15,
+        paddingHorizontal:10
+        
     },
-    qtdInput: {
-
+    actions: {
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-between',
+    },
+    buttonAdd: {
+        backgroundColor: '#3fd1ff',
+        borderRadius: 4,
+        width: '20%',
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    buttonText : {
+        color: '#101026',
+        fontSize: 18,
+        fontWeight: 'bold'
+    },
+    buttonNext: {
+        backgroundColor: '#3fffa3',
+        borderRadius: 4,
+        height: 40,
+        width: '75%',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
