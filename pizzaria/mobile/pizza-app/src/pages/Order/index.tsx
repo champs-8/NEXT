@@ -1,7 +1,10 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native'
-import {useRoute, RouteProp} from '@react-navigation/native'
+import {useRoute, RouteProp, useNavigation} from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { StackParamsList } from '../../routes/app.routes';
 import {Feather} from '@expo/vector-icons'
+import { api } from '../../services/api';
 
 type RouteDetailParams = {
     Order: {
@@ -16,13 +19,33 @@ type OrderRouteProps = RouteProp<RouteDetailParams, 'Order'>;
 
 export default function Order() {
 
+    const navigation = useNavigation<NativeStackNavigationProp<StackParamsList>>();
+
+    async function deleteOrder() {
+        try{
+             await api.delete('/orders', {
+                params: {
+                    //o ? é se nao vier dados no params
+                    id_order: route.params?.order_id
+                }
+             })
+
+            //  navigation.navigate('Dashboard');
+             navigation.goBack();
+            
+        }catch(err){
+            console.log(err);
+        }
+
+    }
+
     const route = useRoute<OrderRouteProps>();
     
     return(
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Mesa {route.params.table}</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={deleteOrder}>
                     <Feather name='trash-2' size={28} color={'#ff3f4b'}/>
                 </TouchableOpacity>
             </View>
