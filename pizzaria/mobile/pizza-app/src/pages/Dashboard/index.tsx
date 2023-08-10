@@ -4,6 +4,7 @@ import {Text, SafeAreaView, TouchableOpacity, TextInput , StyleSheet} from "reac
 import { useNavigation } from "@react-navigation/native";
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import {StackParamsList} from '../../routes/app.routes'
+import { api } from "../../services/api";
 
 export default function Dashboard() {
 
@@ -19,7 +20,14 @@ export default function Dashboard() {
 
         //precisa fazer a requisição e abrir a mesa e navegar para a proxima tela
         //tem que passar dois params, sao configurados na tipagem
-        navigation.navigate('Order', {table: table, order_id: ''})
+
+        const response = await api.post('/orders', {
+             table: Number(table)
+        })
+
+        navigation.navigate('Order', {table: table, order_id: response.data.id})
+
+        setTable('');
     }
 
     return(

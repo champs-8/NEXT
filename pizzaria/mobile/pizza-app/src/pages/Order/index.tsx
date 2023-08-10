@@ -1,7 +1,10 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native'
-import {useRoute, RouteProp} from '@react-navigation/native'
+import {useRoute, RouteProp, useNavigation} from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { StackParamsList } from '../../routes/app.routes';
 import {Feather} from '@expo/vector-icons'
+import { api } from '../../services/api';
 
 type RouteDetailParams = {
     Order: {
@@ -12,9 +15,55 @@ type RouteDetailParams = {
 
 type OrderRouteProps = RouteProp<RouteDetailParams, 'Order'>;
 
+type CategoryProps = {
+    id: string,
+    name: string
+}
+
 
 
 export default function Order() {
+
+    //armazenar categorias encontradas
+    //nessa tipagem, pode receber objetos de um array, ou se nao tiver nada, um array vazio
+    const [category, setCategory] = useState<CategoryProps[]|[]>([]);
+    const [catSelected, setCatSelected] = useState<CategoryProps>(); 
+
+    //quantidade que vai querer de cada produto
+    const [amount, setAmount] = useState('1');
+
+    //buscar categorias
+    useEffect(() => {
+        async function loadInfo() {
+
+            const response = await api.get('/categories');
+
+            setCategory(response.data);
+            setCatSelected(response.data[0]);
+
+        }
+        loadInfo();
+    }, [])
+
+    const navigation = useNavigation<NativeStackNavigationProp<StackParamsList>>();
+
+    async function deleteOrder() {
+        try{
+             await api.delete('/orders', {
+                params: {
+                    //o ? é se nao vier dados no params
+                    id_order: route.params?.order_id
+                }
+             })
+
+            //  navigation.navigate('Dashboard');
+             navigation.goBack();
+            
+        }catch(err){
+            console.log(err);
+        }
+
+    }
 
     const route = useRoute<OrderRouteProps>();
     
@@ -22,16 +71,18 @@ export default function Order() {
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Mesa {route.params.table}</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={deleteOrder}>
                     <Feather name='trash-2' size={28} color={'#ff3f4b'}/>
                 </TouchableOpacity>
             </View>
 
-
-
-            <TouchableOpacity style={styles.input}>
-                <Text style={{color: '#fff'}}>Pizzas</Text>
-            </TouchableOpacity>
+            {/* se caso nao ter respondido nenhuma categoria */}
+            {category.length !== 0 && (
+                <TouchableOpacity style={styles.input}>
+                    <Text style={{color: '#fff'}}>{catSelected?.name}</Text>
+                </TouchableOpacity>
+            )}
+            
             <TouchableOpacity style={styles.input}>
                 <Text style={{color: '#fff'}}>Calabresa</Text>
             </TouchableOpacity>
@@ -44,7 +95,8 @@ export default function Order() {
                     placeholderTextColor={'#f0f0f0'} 
                     keyboardType='numeric' 
                     style={[styles.input, {width: '60%', textAlign: 'center'}]} 
-                    value='1'
+                    value={amount}
+                    onChangeText={setAmount}
                 />
             </View>
 
