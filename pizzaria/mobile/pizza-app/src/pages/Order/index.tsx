@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native'
 import {useRoute, RouteProp, useNavigation} from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -15,9 +15,35 @@ type RouteDetailParams = {
 
 type OrderRouteProps = RouteProp<RouteDetailParams, 'Order'>;
 
+type CategoryProps = {
+    id: string,
+    name: string
+}
+
 
 
 export default function Order() {
+
+    //armazenar categorias encontradas
+    //nessa tipagem, pode receber objetos de um array, ou se nao tiver nada, um array vazio
+    const [category, setCategory] = useState<CategoryProps[]|[]>([]);
+    const [catSelected, setCatSelected] = useState<CategoryProps>(); 
+
+    //quantidade que vai querer de cada produto
+    const [amount, setAmount] = useState('1');
+
+    //buscar categorias
+    useEffect(() => {
+        async function loadInfo() {
+
+            const response = await api.get('/categories');
+
+            setCategory(response.data);
+            setCatSelected(response.data[0]);
+
+        }
+        loadInfo();
+    }, [])
 
     const navigation = useNavigation<NativeStackNavigationProp<StackParamsList>>();
 
@@ -50,11 +76,13 @@ export default function Order() {
                 </TouchableOpacity>
             </View>
 
-
-
-            <TouchableOpacity style={styles.input}>
-                <Text style={{color: '#fff'}}>Pizzas</Text>
-            </TouchableOpacity>
+            {/* se caso nao ter respondido nenhuma categoria */}
+            {category.length !== 0 && (
+                <TouchableOpacity style={styles.input}>
+                    <Text style={{color: '#fff'}}>{catSelected?.name}</Text>
+                </TouchableOpacity>
+            )}
+            
             <TouchableOpacity style={styles.input}>
                 <Text style={{color: '#fff'}}>Calabresa</Text>
             </TouchableOpacity>
@@ -67,7 +95,8 @@ export default function Order() {
                     placeholderTextColor={'#f0f0f0'} 
                     keyboardType='numeric' 
                     style={[styles.input, {width: '60%', textAlign: 'center'}]} 
-                    value='1'
+                    value={amount}
+                    onChangeText={setAmount}
                 />
             </View>
 
