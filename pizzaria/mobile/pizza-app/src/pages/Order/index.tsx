@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native'
+import {View, Text, StyleSheet, TouchableOpacity, TextInput, Modal} from 'react-native'
 import {useRoute, RouteProp, useNavigation} from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamsList } from '../../routes/app.routes';
 import {Feather} from '@expo/vector-icons'
 import { api } from '../../services/api';
+import { ModalPicker } from '../../components/ModalPicker';
 
 type RouteDetailParams = {
     Order: {
@@ -15,7 +16,7 @@ type RouteDetailParams = {
 
 type OrderRouteProps = RouteProp<RouteDetailParams, 'Order'>;
 
-type CategoryProps = {
+export type CategoryProps = {
     id: string,
     name: string
 }
@@ -31,6 +32,10 @@ export default function Order() {
 
     //quantidade que vai querer de cada produto
     const [amount, setAmount] = useState('1');
+
+
+    //controlar quando o modal vai estar aberto ou fechado
+    const [modalCategoryVisible, setModalCategoryVisible] = useState(false)
 
     //buscar categorias
     useEffect(() => {
@@ -78,7 +83,7 @@ export default function Order() {
 
             {/* se caso nao ter respondido nenhuma categoria */}
             {category.length !== 0 && (
-                <TouchableOpacity style={styles.input}>
+                <TouchableOpacity style={styles.input} onPress={() => setModalCategoryVisible(true)}>
                     <Text style={{color: '#fff'}}>{catSelected?.name}</Text>
                 </TouchableOpacity>
             )}
@@ -109,6 +114,22 @@ export default function Order() {
                     <Text style={styles.buttonText}>Avançar</Text>
                 </TouchableOpacity>
             </View>
+
+            <Modal 
+                transparent={true}
+                visible={modalCategoryVisible}
+                animationType='fade'
+            >
+                <ModalPicker
+                    //precisa passar todas as categorias pra ele, o metodo para fechar ele
+                    // e qual que esta selecionado
+
+                    handleCloseModal = {() => setModalCategoryVisible(false)}
+                    options={category}
+                    selectedItem = {() => {}}
+                />
+            </Modal>
+
         </View>
     );
 }
