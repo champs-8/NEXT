@@ -71,6 +71,10 @@ export default function Order() {
     }
 
     const route = useRoute<OrderRouteProps>();
+
+    function handleChangeCategory(item: CategoryProps) {
+        setCatSelected(item)
+    }
     
     return(
         <View style={styles.container}>
@@ -126,7 +130,7 @@ export default function Order() {
 
                     handleCloseModal = {() => setModalCategoryVisible(false)}
                     options={category}
-                    selectedItem = {() => {}}
+                    selectedItem = { handleChangeCategory }
                 />
             </Modal>
 
