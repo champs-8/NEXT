@@ -5,18 +5,20 @@ import { CategoryProps } from "../../pages/Order";
 interface ModalPickerProps {
     options : CategoryProps[];
     handleCloseModal: () => void;
-    selectItem: () => void;
+    selectedItem: (item: CategoryProps) => void;
 }
 
 //pegar dimensoes do usuario
 //renomeou as variaveis
 const {width: WIDTH, height: HEIGHT} = Dimensions.get('window')
 
-export function ModalPicker({handleCloseModal, options, selectItem}: ModalPickerProps) {
+export function ModalPicker({handleCloseModal, options, selectedItem}: ModalPickerProps) {
 
     //é uma categoria selecionada
     function onPressItem(item: CategoryProps) {
-        console.log(item);
+        // console.log(item);
+        selectedItem(item)
+        handleCloseModal();
     }
     
     
@@ -49,17 +51,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     content: {
-        width: WIDTH,
-        height: HEIGHT/2,
+        width: WIDTH*.7,
+        height: HEIGHT/4,
         backgroundColor: '#fff',
         borderRadius: 4,
         borderWidth: 1,
-        borderColor: '#8a8a8a'
+        borderColor: '#8a8a8a',
     },
     option : {
-
+        alignItems: 'center',
+        borderTopWidth: 0.8,
+        borderTopColor: '#8a8a8a',
+        height: 40,
+        paddingTop: 10
     },
     item: {
-        
+        fontSize: 18,
     }
 });
