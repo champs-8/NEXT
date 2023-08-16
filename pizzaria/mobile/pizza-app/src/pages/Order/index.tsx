@@ -21,6 +21,14 @@ export type CategoryProps = {
     name: string
 }
 
+type ProductsProps = {
+    id: string, 
+    name: string,
+    price: number,
+    description: string,
+    category_id: string
+}
+
 
 
 export default function Order() {
@@ -28,7 +36,7 @@ export default function Order() {
     //armazenar categorias encontradas
     //nessa tipagem, pode receber objetos de um array, ou se nao tiver nada, um array vazio
     const [category, setCategory] = useState<CategoryProps[]|[]>([]);
-    const [catSelected, setCatSelected] = useState<CategoryProps>(); 
+    const [catSelected, setCatSelected] = useState<CategoryProps | undefined>(); 
 
     //quantidade que vai querer de cada produto
     const [amount, setAmount] = useState('1');
@@ -36,6 +44,17 @@ export default function Order() {
 
     //controlar quando o modal vai estar aberto ou fechado
     const [modalCategoryVisible, setModalCategoryVisible] = useState(false)
+
+
+// ----Ficar responsavel pelo input do produto--------
+
+    const [products, setProducts] = useState<ProductsProps[]| []>([]); 
+    const [productSelected, setProductSelected] = useState<ProductsProps | undefined>();
+    const [modalProductVisible, setModalProductVisible] = useState(false)
+
+
+// ---------------------------------------------------
+
 
     //buscar categorias
     useEffect(() => {
@@ -49,6 +68,29 @@ export default function Order() {
         }
         loadInfo();
     }, [])
+
+
+    //buscar produtos das categorias
+    //conforme a categoria muda segundo a dependencia,
+    //muda tambem os valores que do useEffect
+
+    useEffect(() => {
+        async function laodProduct() {
+
+            const response = await api.get('/products', {
+                params: {
+                    category_id: catSelected?.id
+                }
+            });
+
+            setProducts(response.data)
+            //ja para ficar exibindo
+            setProductSelected(response.data[0])
+        }
+
+        laodProduct();
+    }, [catSelected])
+
 
     const navigation = useNavigation<NativeStackNavigationProp<StackParamsList>>();
 
@@ -92,9 +134,12 @@ export default function Order() {
                 </TouchableOpacity>
             )}
             
-            <TouchableOpacity style={styles.input}>
-                <Text style={{color: '#fff'}}>Calabresa</Text>
-            </TouchableOpacity>
+            {products.length !== 0 && (
+                <TouchableOpacity style={styles.input}>
+                    <Text style={{color: '#fff'}}>{productSelected?.name}</Text>
+                </TouchableOpacity>
+            )}
+            
 
 
             <View style={styles.qtdContainer}>
@@ -131,6 +176,7 @@ export default function Order() {
                     handleCloseModal = {() => setModalCategoryVisible(false)}
                     options={category}
                     selectedItem = { handleChangeCategory }
+                    
                 />
             </Modal>
 
@@ -207,5 +253,5 @@ const styles = StyleSheet.create({
         width: '75%',
         alignItems: 'center',
         justifyContent: 'center'
-    }
+    },
 });
