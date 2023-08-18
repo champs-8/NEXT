@@ -24,9 +24,6 @@ export type CategoryProps = {
 type ProductsProps = {
     id: string, 
     name: string,
-    price: number,
-    description: string,
-    category_id: string
 }
 
 
@@ -75,7 +72,7 @@ export default function Order() {
     //muda tambem os valores que do useEffect
 
     useEffect(() => {
-        async function laodProduct() {
+        async function loadProduct() {
 
             const response = await api.get('/products', {
                 params: {
@@ -88,7 +85,7 @@ export default function Order() {
             setProductSelected(response.data[0])
         }
 
-        laodProduct();
+        loadProduct();
     }, [catSelected])
 
 
@@ -117,6 +114,10 @@ export default function Order() {
     function handleChangeCategory(item: CategoryProps) {
         setCatSelected(item)
     }
+
+    function handleChangeProduct(item: ProductsProps){
+        setProductSelected(item);
+    }
     
     return(
         <View style={styles.container}>
@@ -135,7 +136,7 @@ export default function Order() {
             )}
             
             {products.length !== 0 && (
-                <TouchableOpacity style={styles.input}>
+                <TouchableOpacity style={styles.input} onPress={() => setModalProductVisible(true)}>
                     <Text style={{color: '#fff'}}>{productSelected?.name}</Text>
                 </TouchableOpacity>
             )}
@@ -175,11 +176,23 @@ export default function Order() {
 
                     handleCloseModal = {() => setModalCategoryVisible(false)}
                     options={category}
-                    selectedItem = { handleChangeCategory }
-                    
+                    selectedItem = { handleChangeCategory }  
                 />
             </Modal>
+            
+            {/* modal produtos */}
 
+            <Modal 
+                visible={modalProductVisible}
+                transparent={true}
+                animationType='fade'
+            >
+                <ModalPicker
+                    handleCloseModal={() => setModalProductVisible(false)}
+                    options={products}
+                    selectedItem={ handleChangeProduct }                
+                />
+            </Modal>
         </View>
     );
 }
