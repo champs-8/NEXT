@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, TextInput, Modal} from 'react-native'
+import {View, Text, StyleSheet, TouchableOpacity, TextInput, Modal, FlatList} from 'react-native'
 import {useRoute, RouteProp, useNavigation} from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamsList } from '../../routes/app.routes';
 import {Feather} from '@expo/vector-icons'
 import { api } from '../../services/api';
 import { ModalPicker } from '../../components/ModalPicker';
+import { ListProducts } from '../../components/ListProducts';
 
 type RouteDetailParams = {
     Order: {
@@ -26,6 +27,12 @@ type ProductsProps = {
     name: string,
 }
 
+export type ProdAddProps = {
+    id: string,
+    product_id: string,
+    name: string,
+    amount: string|number
+}
 
 
 export default function Order() {
@@ -49,7 +56,10 @@ export default function Order() {
     const [productSelected, setProductSelected] = useState<ProductsProps | undefined>();
     const [modalProductVisible, setModalProductVisible] = useState(false)
 
+// --------- Adicionar produtos confirmados ----------
 
+    const [prodAdd, setProdAdd] = useState<ProdAddProps[]>([]);
+    
 // ---------------------------------------------------
 
 
@@ -118,14 +128,39 @@ export default function Order() {
     function handleChangeProduct(item: ProductsProps){
         setProductSelected(item);
     }
+
+    async function handleAddProducts() {
+
+        const response = await api.post('/item/add', {
+            amount: Number(amount),
+            product_id: productSelected?.id,
+            order_id: route.params?.order_id
+        });
+
+        let data = {
+            id: response.data.id,
+            product_id: productSelected?.id as string,
+            name: productSelected?.name as string,  //são de fato uma string
+            amount: amount
+        }
+
+        //pega todos os dados que tinha dentro do array e adiciona mais outros
+        setProdAdd(oldArray => [...oldArray, data])
+        setAmount('1')
+    }
     
     return(
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Mesa {route.params.table}</Text>
-                <TouchableOpacity onPress={deleteOrder}>
-                    <Feather name='trash-2' size={28} color={'#ff3f4b'}/>
-                </TouchableOpacity>
+                
+                {/* se nao tiver nenhum item na order, pode excluir */}
+
+                { prodAdd.length === 0 && (
+                    <TouchableOpacity onPress={deleteOrder}>
+                        <Feather name='trash-2' size={28} color={'#ff3f4b'}/>
+                    </TouchableOpacity>
+                )}
             </View>
 
             {/* se caso nao ter respondido nenhuma categoria */}
@@ -156,14 +191,24 @@ export default function Order() {
             </View>
 
             <View style={styles.actions}>
-                <TouchableOpacity style={styles.buttonAdd}>
+                <TouchableOpacity style={styles.buttonAdd} onPress={handleAddProducts}>
                     <Text style={styles.buttonText}>+</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.buttonNext}>
+                {/* pode fazer conficional nos styles, uau */}
+
+                <TouchableOpacity style={[styles.buttonNext, {opacity: prodAdd.length === 0 ? .3 : 1}]} disabled={prodAdd.length === 0}>
                     <Text style={styles.buttonText}>Avançar</Text>
                 </TouchableOpacity>
             </View>
+
+            <FlatList
+                showsVerticalScrollIndicator={false} //barra de rolagem desativada
+                style={{flex: 1, marginTop: 24}}
+                data={prodAdd}
+                keyExtractor={(item) => item.id} // id de cada item
+                renderItem={({item}) => <ListProducts data={item}/>}
+            />
 
             <Modal 
                 transparent={true}
